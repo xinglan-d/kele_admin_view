@@ -7,10 +7,21 @@
 
 <script>
 
-export default {
-  name: 'app'
-}
+  export default {
+    name: 'app'
+  }
 </script>
 
-<style>
+<style lang="less">
+
+  .el-tabs {
+    height: 100%;
+    border: 0 !important;
+
+    .el-tabs__content {
+      height: calc(100% - 40px) !important;
+      padding: 0 !important;
+    }
+  }
+
 </style>

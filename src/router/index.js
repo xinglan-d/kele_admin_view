@@ -2,6 +2,7 @@ import Vue from 'vue'
 import VueRouter from 'vue-router'
 import Login from '../views/Login'
 import Home from '../views/Home'
+import List from '../views/List'
 
 Vue.use(VueRouter)
 
@@ -17,11 +18,16 @@ const routes = [
   {
     path: '/home',
     component: Home
+  },
+  {
+    path: '/getAll',
+    component: List
   }
 ]
 
 const router = new VueRouter({
-  routes
+  mode: 'history',
+  routes: routes
 })
 // 挂载路由导航守卫
 router.beforeEach((to, from, next) => {
