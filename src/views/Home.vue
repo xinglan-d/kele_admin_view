@@ -27,7 +27,7 @@
             </template>
             <!--二级菜单-->
             <el-menu-item :index="twoMenu.primaryKey" v-for="twoMenu in oneMenu.menus" :key="twoMenu.primaryKey"
-                          @click="addMenuTabs(twoMenu)">
+                          @click="addMenuTabs(twoMenu,oneMenu.serverUrl)">
               <template slot="title">
                 <!--图标-->
                 <i class="el-icon-location"></i>
@@ -112,12 +112,15 @@
           const sysMenu = this.sysMenuList[i]
           if (primaryKey === sysMenu.primaryKey) {
             this.menuList = sysMenu.menus
+            this.menuList.forEach(menu => {
+              menu.serverUrl = sysMenu.servicePath
+            })
             return
           }
         }
       },
       // 添加标签
-      addMenuTabs (menuInfo) {
+      addMenuTabs (menuInfo, serverUrl) {
         this.tabsValue = menuInfo.primaryKey
         for (let i = 0; i < this.menuTabs.length; i++) {
           const tabs = this.menuTabs[i]
@@ -125,9 +128,12 @@
             return
           }
         }
+        if (serverUrl == null) {
+          serverUrl = menuInfo.serverUrl ? menuInfo.serverUrl : ''
+        }
         let url
         if (menuInfo.type === '1') {
-          url = '/getAll?baseUrl=' + menuInfo.url
+          url = '/getAll?baseUrl=' + serverUrl + menuInfo.url
         } else {
           url = '/error'
         }

@@ -17,7 +17,9 @@ import {
   Tabs,
   TabPane,
   Table,
-  TableColumn
+  TableColumn,
+  Pagination,
+  Dialog
 } from 'element-ui'
 
 Vue.use(Button)
@@ -37,4 +39,6 @@ Vue.use(Tabs)
 Vue.use(TabPane)
 Vue.use(Table)
 Vue.use(TableColumn)
+Vue.use(Pagination)
+Vue.use(Dialog)
 Vue.prototype.$message = Message

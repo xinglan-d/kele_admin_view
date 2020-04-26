@@ -31,12 +31,12 @@ const router = new VueRouter({
 })
 // 挂载路由导航守卫
 router.beforeEach((to, from, next) => {
-  if (to.path === '/login') return next()
-  // 判断是否存在token
-  const token = window.sessionStorage.getItem('token')
-  if (!token) {
-    return next('/login')
-  }
+  // if (to.path === '/login') return next()
+  // // 判断是否存在token
+  // const token = window.sessionStorage.getItem('token')
+  // if (!token) {
+  //   return next('/login')
+  // }
   return next()
 })
 
