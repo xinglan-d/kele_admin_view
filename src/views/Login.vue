@@ -8,8 +8,8 @@
       <!-- 登录表单区 -->
       <el-form ref="loginFormRef" label-width="0px" class="login_form" :rules="loginFormRules" :model="loginForm">
         <!--        用户名-->
-        <el-form-item prop="username">
-          <el-input v-model="loginForm.username" prefix-icon="iconfont icon-user"></el-input>
+        <el-form-item prop="account">
+          <el-input v-model="loginForm.account" prefix-icon="iconfont icon-user"></el-input>
         </el-form-item>
         <!--        密码-->
         <el-form-item prop="password">
@@ -31,12 +31,12 @@
       return {
         // 登录表单的数据对象
         loginForm: {
-          username: '',
+          account: '',
           password: ''
         },
         // 这是表单的验证规则
         loginFormRules: {
-          username: [
+          account: [
             {
               required: true,
               message: '请输入用户名',
@@ -74,14 +74,14 @@
           if (!valid) {
             return
           }
-          const result = await this.$http.post('toLogin', this.loginForm)
+          const result = await this.$http.post('/system/toLogin', this.loginForm)
           if (result.data.code !== 200) {
             this.$message.error('账户或密码错误')
             return
           }
           this.$message.success('登录成功，正在跳转')
           // 保存token
-          window.sessionStorage.setItem('token', 123)
+          window.sessionStorage.setItem('token', result.data.data)
           this.$router.push('/home')
         })
       }

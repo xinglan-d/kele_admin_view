@@ -17,7 +17,7 @@
         text-color="#fff"
         active-text-color="#ffd04b">
         <template v-for="oneMenu in menuList">
-          <el-submenu v-if="oneMenu.type == 0" :index="oneMenu.primaryKey" :key="oneMenu.id">
+          <el-submenu v-if="oneMenu.type == 0" :index="oneMenu.menuId" :key="oneMenu.menuId">
             <!--一级菜单模版区-->
             <template slot="title">
               <!--图标-->
@@ -26,7 +26,7 @@
               <span>{{oneMenu.name}}</span>
             </template>
             <!--二级菜单-->
-            <el-menu-item :index="twoMenu.primaryKey" v-for="twoMenu in oneMenu.menus" :key="twoMenu.primaryKey"
+            <el-menu-item :index="twoMenu.menuId" v-for="twoMenu in oneMenu.menus" :key="twoMenu.menuId"
                           @click="addMenuTabs(twoMenu,oneMenu.serverUrl)">
               <template slot="title">
                 <!--图标-->
@@ -36,7 +36,7 @@
               </template>
             </el-menu-item>
           </el-submenu>
-          <el-menu-item v-if="oneMenu.type == 1" :index="oneMenu.primaryKey" :key="oneMenu.id"
+          <el-menu-item v-if="oneMenu.type == 1" :index="oneMenu.menuId" :key="oneMenu.id"
                         @click="addMenuTabs(oneMenu)">
             <i class="el-icon-menu"></i>
             <span slot="title">{{oneMenu.name}}</span>
@@ -53,16 +53,16 @@
           text-color="#fff"
           active-text-color="#ffd04b">
           <!--服务默认只有1级-->
-          <el-menu-item :index="item.primaryKey" v-for="item in sysMenuList" :key="item.primaryKey"
-                        @click="switchService(item.primaryKey)">{{item.name}}
+          <el-menu-item :index="item.serviceId" v-for="item in sysMenuList" :key="item.serviceId"
+                        @click="switchService(item.serviceId)">{{item.name}}
           </el-menu-item>
         </el-menu>
       </el-header>
       <el-main>
         <!--标签页-->
         <el-tabs v-model="tabsValue" type="border-card" @tab-remove="removeMenuTabs">
-          <el-tab-pane v-for="tabs in menuTabs" :key="tabs.primaryKey" :label="tabs.name"
-                       :name="tabs.primaryKey" :closable="tabs.closable">
+          <el-tab-pane v-for="tabs in menuTabs" :key="tabs.menuId" :label="tabs.name"
+                       :name="tabs.menuId" :closable="tabs.closable">
             <!--具体内容展示区-->
             <iframe class="info-show" :src="tabs.url"></iframe>
           </el-tab-pane>
@@ -86,7 +86,7 @@
       this.getMenuList() // 获取所有的服务和菜单
       // 默认首页
       this.menuTabs[0] = {
-        primaryKey: '0',
+        menuId: '0',
         name: '首页',
         closable: false,
         url: '/admin'
@@ -100,17 +100,17 @@
       },
       // 获取所有的菜单
       async getMenuList () {
-        const { data: res } = await this.$http.get('getSysMenu')
+        const { data: res } = await this.$http.get('/system/sysService/getService')
         if (res.code !== 200) {
           return this.$message.error(res.msg)
         }
         this.sysMenuList = res.data
       },
       // 切换服务调用方法
-      switchService (primaryKey) {
+      switchService (serviceId) {
         for (let i = 0; i < this.sysMenuList.length; i++) {
           const sysMenu = this.sysMenuList[i]
-          if (primaryKey === sysMenu.primaryKey) {
+          if (serviceId === sysMenu.serviceId) {
             this.menuList = sysMenu.menus
             this.menuList.forEach(menu => {
               menu.serverUrl = sysMenu.servicePath
@@ -121,10 +121,10 @@
       },
       // 添加标签
       addMenuTabs (menuInfo, serverUrl) {
-        this.tabsValue = menuInfo.primaryKey
+        this.tabsValue = menuInfo.menuId
         for (let i = 0; i < this.menuTabs.length; i++) {
           const tabs = this.menuTabs[i]
-          if (tabs.primaryKey === menuInfo.primaryKey) {
+          if (tabs.menuId === menuInfo.menuId) {
             return
           }
         }
@@ -133,12 +133,12 @@
         }
         let url
         if (menuInfo.type === '1') {
-          url = '/getAll?baseUrl=' + serverUrl + menuInfo.url
+          url = '/getAll?baseUrl=' + menuInfo.url + '&menuId=' + menuInfo.menuId + '&serviceUrl=' + serverUrl
         } else {
           url = '/error'
         }
         this.menuTabs.push({
-          primaryKey: menuInfo.primaryKey,
+          menuId: menuInfo.menuId,
           name: menuInfo.name,
           closable: true,
           url: url
@@ -149,11 +149,11 @@
         let tabsValue = '0'
         for (let i = 0; i < this.menuTabs.length; i++) {
           const tabs = this.menuTabs[i]
-          if (tabs.primaryKey === name) {
+          if (tabs.menuId === name) {
             this.menuTabs.splice(i, 1)
             break
           }
-          tabsValue = tabs.primaryKey
+          tabsValue = tabs.menuId
         }
         this.tabsValue = tabsValue
       }
