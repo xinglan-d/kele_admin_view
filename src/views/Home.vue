@@ -205,6 +205,7 @@
   .el-main {
     background-color: #eaedf1;
     padding: 0;
+    height: 100%;
   }
 
   .el-tab-pane {

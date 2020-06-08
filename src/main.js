@@ -8,13 +8,12 @@ import './assets/fonts/iconfont.css'
 import './assets/css/global.css'
 
 import axios from 'axios'
-
 // 配置请求的根路径
 axios.defaults.baseURL = '/api'
 axios.interceptors.request.use(config => {
   const token = window.sessionStorage.getItem('token')
   if (token != null) {
-    config.headers.Authorization = 'Bearer' + token
+    config.headers.Authorization = 'Bearer ' + token
   }
   return config
 })

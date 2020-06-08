@@ -28,7 +28,8 @@
           </template>
         </template>
       </div>
-      <el-table :data="tableData" border
+      <el-table :data="tableData"
+                border
                 style="min-width: 100%"
                 @selection-change="checkboxData">
         <template v-for="header in tableAttr">
@@ -46,7 +47,6 @@
         </template>
         <template v-if="tableButtons.length != 0">
           <el-table-column
-            fixed="right"
             label="操作"
           >
             <template slot-scope="scope">
@@ -136,6 +136,7 @@
     <el-dialog title="请选择" :visible="treeVisible" @close="closeTreePage">
       <el-tree :data="treeData"
                highlight-current
+               check-strictly
                ref="tree"
                :show-checkbox="treeMultiple"
                node-key="id"
@@ -151,6 +152,7 @@
 </template>
 
 <script>
+
   export default {
     data () {
       return {
@@ -260,7 +262,7 @@
         this.search.forEach(search => {
           searchs.push(search)
         })
-        const { data: res } = await this.$http.post(this.getBaseUrl() + '/getAll',
+        const { data: res } = await this.$http.post(this.getBaseUrl(),
           {
             pageNumber: this.currentPage,
             pageSize: this.pageSize,
@@ -578,7 +580,8 @@
       setUpTree () {
         let value
         if (this.treeMultiple) {
-          value = this.$refs.tree.getCheckedKeys()
+          value = this.$refs.tree.getCheckedKeys(false)
+          value = value.concat(this.$refs.tree.getHalfCheckedKeys())
           if (value.length === 0) {
             this.$message.error('未选择数据')
           }
@@ -598,7 +601,7 @@
         const path = this.$router.history.current.path
         const newQuery = JSON.parse(JSON.stringify(query))
         newQuery.baseUrl = button.url
-        newQuery.menuId = button.parentId
+        newQuery.menuId = button.menuId
         newQuery.pid = pid
         this.$router.push({
           path,
